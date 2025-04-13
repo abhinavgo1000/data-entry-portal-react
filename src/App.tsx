@@ -1,11 +1,33 @@
-import * as React from 'react'
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import PageHeader from './components/shell/PageHeader/PageHeader';
+import PageFooter from './components/shell/PageFooter/PageFooter';
 import './App.css'
 
 function App() {
 
   return (
     <React.Fragment>
-      <p>Placeholder for the app</p>
+      <PageHeader />
+      <Box sx={{ width: '100%', height: '100vh', m: 20}}>
+        <Router>
+          <Routes>
+            {/* Define your routes here */}
+            <Route path="/home" element={<Typography variant='h4'>Home Page</Typography>} />
+            <Route path='/' element={<Navigate to="/home" />} />
+            <Route path="/about" element={<Typography variant='h4'>About Page</Typography>} />
+            <Route path="/form" element={<Typography variant='h4'>Data Entry Form</Typography>} />
+            <Route path="/barchart" element={<Typography variant='h4'>Bar Chart</Typography>} />
+            <Route path="/linechart" element={<Typography variant='h4'>Line Chart</Typography>} />
+            <Route path="/piechart" element={<Typography variant='h4'>Pie Chart</Typography>} />
+            <Route path="/notfound" element={<Typography variant='h4'>404 Not Found</Typography>} />
+            <Route path="*" element={<Navigate to="/notfound" />} />
+          </Routes>
+        </Router>
+      </Box>
+      <PageFooter />
     </React.Fragment>
   )
 }
