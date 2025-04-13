@@ -219,7 +219,7 @@ function PageHeader() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
-                        MUI
+                        Data Entry Portal
                     </Typography>
                     <Search>
                         <SearchIconWrapper>
