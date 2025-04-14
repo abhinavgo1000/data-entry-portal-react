@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import './FormPage.css';
+import './LineChsrtPage.css';
 
 function LineChartPage() {
   return (
