@@ -17,12 +17,12 @@ function App() {
             {/* Define your routes here */}
             <Route path="/home" element={<Typography variant='h4'>Home Page</Typography>} />
             <Route path='/' element={<Navigate to="/home" />} />
-            <Route path="/about" element={<Typography variant='h4'>About Page</Typography>} />
+            <Route path="/about-me" element={<Typography variant='h4'>About Page</Typography>} />
             <Route path="/form" element={<Typography variant='h4'>Data Entry Form</Typography>} />
-            <Route path="/barchart" element={<Typography variant='h4'>Bar Chart</Typography>} />
-            <Route path="/linechart" element={<Typography variant='h4'>Line Chart</Typography>} />
-            <Route path="/piechart" element={<Typography variant='h4'>Pie Chart</Typography>} />
-            <Route path="/notfound" element={<Typography variant='h4'>404 Not Found</Typography>} />
+            <Route path="/bar-chart" element={<Typography variant='h4'>Bar Chart</Typography>} />
+            <Route path="/line-chart" element={<Typography variant='h4'>Line Chart</Typography>} />
+            <Route path="/pie-chart" element={<Typography variant='h4'>Pie Chart</Typography>} />
+            <Route path="/not-found" element={<Typography variant='h4'>404 Not Found</Typography>} />
             <Route path="*" element={<Navigate to="/notfound" />} />
           </Routes>
         </Router>

@@ -198,7 +198,7 @@ function PageHeader() {
 
     return (
         <header>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ width: '100%' }}>
                 <AppBar position="static">
                     <Toolbar>
                     <IconButton
