@@ -6,7 +6,7 @@ import PageHeader from './components/shell/PageHeader/PageHeader';
 import PageFooter from './components/shell/PageFooter/PageFooter';
 import HomePage from './components/pages/HomePage/HomePage';
 import AboutMePage from './components/pages/AboutMePage/AboutMePage';
-import DataEntryFormPage from './components/pages/DataEntryFormPage/DataEntryormPage';
+import DataEntryFormPage from './components/pages/DataEntryFormPage/DataEntryFormPage';
 import DataEditFormPage from './components/pages/DataEditEditFormPage/DataEditFormPage';
 import BarChartPage from './components/pages/BarChartPage/BarChartPage';
 import LineChartPage from './components/pages/LineChartPage/LineChartPage';
