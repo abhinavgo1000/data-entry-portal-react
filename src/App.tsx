@@ -7,6 +7,7 @@ import PageFooter from './components/shell/PageFooter/PageFooter';
 import HomePage from './components/pages/HomePage/HomePage';
 import AboutMePage from './components/pages/AboutMePage/AboutMePage';
 import FormPage from './components/pages/FormPage/FormPage';
+import EditFormPage from './components/pages/EditFormPage/EditFormPage';
 import BarChartPage from './components/pages/BarChartPage/BarChartPage';
 import LineChartPage from './components/pages/LineChartPage/LineChartPage';
 import PieChartPage from './components/pages/PieChartPage/PieChartPage';
@@ -29,6 +30,7 @@ function App() {
               <Route path='/' element={<Navigate to="/home" />} />
               <Route path="/about-me" element={<AboutMePage />} />
               <Route path="/form" element={<FormPage />} />
+              <Route path="/edit-form" element={<EditFormPage />} />
               <Route path="/bar-chart" element={<BarChartPage />} />
               <Route path="/line-chart" element={<LineChartPage />} />
               <Route path="/pie-chart" element={<PieChartPage />} />
