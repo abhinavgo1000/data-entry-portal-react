@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import './FormPage.css';
+import './DataEditFormPage.css';
 
-function FormPage() {
+function DataEditFormPage() {
   return (
     <React.Fragment>
         <Typography variant='h4'>Data Entry Form</Typography>
@@ -10,4 +10,4 @@ function FormPage() {
   );
 }
 
-export default FormPage;
+export default DataEditFormPage;
