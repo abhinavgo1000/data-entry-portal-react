@@ -1,5 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PageHeader from './components/shell/PageHeader/PageHeader';
@@ -12,15 +14,22 @@ import BarChartPage from './components/pages/BarChartPage/BarChartPage';
 import LineChartPage from './components/pages/LineChartPage/LineChartPage';
 import PieChartPage from './components/pages/PieChartPage/PieChartPage';
 import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
+import ScrollTop from './components/common/ScrollTop/ScrollTop';
 import './App.css';
+
+interface Props {
+  window?: () => Window;
+  children?: React.ReactElement<unknown>;
+}
 
 const queryClient = new QueryClient();
 
-function App() {
+function App(props: Props) {
 
   return (
     <React.Fragment>
       <PageHeader />
+      
       <QueryClientProvider client={queryClient}>
         <Box sx={{ width: '100%', height: '100vh', m: 5 }}>
           <Router>
@@ -41,6 +50,11 @@ function App() {
         </Box>
       </QueryClientProvider>
       <PageFooter />
+      <ScrollTop {...props}>
+        <Fab size="small" aria-label="scroll back to top">
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </ScrollTop>
     </React.Fragment>
   )
 }

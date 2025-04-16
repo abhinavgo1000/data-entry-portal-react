@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
+import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -11,12 +12,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import HomeIcon from '@mui/icons-material/Home';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import PieChartIcon from '@mui/icons-material/PieChart';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
@@ -27,56 +29,53 @@ const Search = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
     '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
+        backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
+        marginLeft: theme.spacing(3),
+        width: 'auto',
     },
   }));
   
   const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
   }));
   
   const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
-    },
+        color: 'inherit',
+        '& .MuiInputBase-input': {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+            transition: theme.transitions.create('width'),
+            width: '100%',
+            [theme.breakpoints.up('md')]: {
+                width: '20ch',
+            },
+        },
   }));
-  
 
 function PageHeader() {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [navMenuEl, setNavMenuEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
 
-    const isMenuOpen = Boolean(anchorEl);
-    const isNavMenuOpen = Boolean(navMenuEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const [openDrawer, setOpenDrawer] = React.useState(false);
 
-    const handleNavMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setNavMenuEl(event.currentTarget);
-    }
+    const navItems = ['Home', 'About', 'Contact'];
+
+    const isMenuOpen = Boolean(anchorEl);
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -88,7 +87,6 @@ function PageHeader() {
 
     const handleMenuClose = () => {
         setAnchorEl(null);
-        setNavMenuEl(null);
         handleMobileMenuClose();
     };
 
@@ -96,31 +94,28 @@ function PageHeader() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
-    const navMenuId = 'primary-search-account-menu';
-    const renderNavMenu = (
-        <Menu
-            anchorEl={navMenuEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={navMenuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isNavMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}><HomeIcon style={{ marginRight: '12px' }} /><span>Home</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><AccountCircle style={{ marginRight: '12px' }} /><span>About Me</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><EditNoteIcon style={{ marginRight: '12px' }} /><span>Data Entry Form</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><BarChartIcon style={{ marginRight: '12px' }} /><span>Bar Chart</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><ShowChartIcon style={{ marginRight: '12px' }} /><span>Line Chart</span></MenuItem>
-            <MenuItem onClick={handleMenuClose}><PieChartIcon style={{ marginRight: '12px' }} /><span>Pie Chart</span></MenuItem>
-        </Menu>
-    );
+    
+    const handleDrawerToggle = () => {
+        setOpenDrawer((prevState) => !prevState);
+    };
+
+    const drawer = (
+        <Box onClick={handleDrawerToggle} sx={{ width: 250, textAlign: 'center' }}>
+            <Typography variant="h6" sx={{ m: 2 }}>
+                Data Entry Portal
+            </Typography>
+          <Divider />
+          <List>
+                {navItems.map((item) => (
+                    <ListItem key={item} disablePadding>
+                        <ListItemButton sx={{ textAlign: 'center' }}>
+                            <ListItemText primary={item} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+          </List>
+        </Box>
+      );
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -197,18 +192,16 @@ function PageHeader() {
     );
 
     return (
-        <header>
-            <Box sx={{ width: '100%' }}>
-                <AppBar position="static">
-                    <Toolbar>
+        <Box sx={{ width: '100%' }}>
+            <CssBaseline />
+            <AppBar position="static" id="back-to-top-anchor">
+                <Toolbar>
                     <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
                         aria-label="open nav menu"
-                        aria-controls={navMenuId}
-                        aria-haspopup="true"
-                        onClick={handleNavMenuOpen}
+                        onClick={handleDrawerToggle}
                         sx={{ mr: 2 }}
                     >
                         <MenuIcon />
@@ -258,25 +251,35 @@ function PageHeader() {
                             <AccountCircle />
                         </IconButton>
                     </Box>
-                        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                            <IconButton
-                                size="large"
-                                aria-label="show more"
-                                aria-controls={mobileMenuId}
-                                aria-haspopup="true"
-                                onClick={handleMobileMenuOpen}
-                                color="inherit"
-                            >
-                                <MoreIcon />
-                            </IconButton>
-                        </Box>
-                    </Toolbar>
-                </AppBar>
-                {renderMobileMenu}
-                {renderNavMenu}
-                {renderMenu}
-            </Box>
-        </header>
+                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                        <IconButton
+                            size="large"
+                            aria-label="show more"
+                            aria-controls={mobileMenuId}
+                            aria-haspopup="true"
+                            onClick={handleMobileMenuOpen}
+                            color="inherit"
+                        >
+                            <MoreIcon />
+                        </IconButton>
+                    </Box>
+                </Toolbar>
+            </AppBar>
+            <nav>
+                <Drawer
+                    variant="temporary"
+                    open={openDrawer}
+                    onClose={handleDrawerToggle}
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                >
+                    {drawer}
+                </Drawer>
+            </nav>
+            {renderMobileMenu}
+            {renderMenu}
+        </Box>
     )
 }
 
