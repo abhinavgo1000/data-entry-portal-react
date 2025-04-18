@@ -3,11 +3,11 @@ import Typography from '@mui/material/Typography';
 import './NotFundPage.css';
 
 function NotFoundPage() {
-  return (
-    <React.Fragment>
-        <Typography variant='h4'>Page Not Found!</Typography>
-    </React.Fragment>
-  );
+    return (
+        <React.Fragment>
+            <Typography variant='h4'>Page Not Found!</Typography>
+        </React.Fragment>
+    );
 }
 
 export default NotFoundPage;
