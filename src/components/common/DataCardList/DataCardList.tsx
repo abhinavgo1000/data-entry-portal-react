@@ -7,6 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import './DataCardList.css';
 
@@ -34,12 +35,16 @@ function DataCardList() {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <IconButton aria-label='edit button'>
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton aria-label='delete button'>
-                        <DeleteIcon />
-                    </IconButton>
+                    <Tooltip title='Edit Entry'>
+                        <IconButton aria-label='edit button'>
+                            <EditIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title='Delete Entry'>
+                        <IconButton aria-label='delete button'>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
                 </CardActions>
             </Card>
             <Box sx={{display: 'flex', justifyContent: 'center', marginTop: 2}}>
