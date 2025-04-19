@@ -9,9 +9,33 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
+import DataAlertDialog from '../DataAlertDialog/DataAlertDialog';
 import './DataCardList.css';
 
 function DataCardList() {
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+
+    const navigate = useNavigate();
+
+    const handleEditClick = () => {
+        navigate('/edit-form');
+    };
+
+    const handleDeleteClick = () => {
+        setDialogOpen(true);
+    };
+
+    const handleDialogRes = (res: boolean) => {
+        setDialogOpen(false);
+        if (res) {
+            // Handle delete action here
+            console.log('Entry deleted');
+        } else {
+            console.log('Delete action cancelled');
+        }
+    };
+
     return (
         <React.Fragment>
             <Card 
@@ -36,12 +60,12 @@ function DataCardList() {
                 </CardContent>
                 <CardActions>
                     <Tooltip title='Edit Entry'>
-                        <IconButton aria-label='edit button'>
+                        <IconButton onClick={handleEditClick} aria-label='edit button'>
                             <EditIcon />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='Delete Entry'>
-                        <IconButton aria-label='delete button'>
+                        <IconButton onClick={handleDeleteClick} aria-label='delete button'>
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
@@ -50,6 +74,17 @@ function DataCardList() {
             <Box sx={{display: 'flex', justifyContent: 'center', marginTop: 2}}>
                 <Pagination count={10} color='primary' />
             </Box>
+            <DataAlertDialog
+                dialogOpen={dialogOpen}
+                onDialogOpen={() => setDialogOpen(true)}
+                onDialogRes={(res) => handleDialogRes(res)}
+                dialogTitle='Delete Entry'
+                dialogAgreeLabel='Delete'
+                dialogDisagreeLabel='Cancel'
+            >
+                Let Google help apps determine location. This means sending anonymous
+                location data to Google, even when no apps are running.
+            </DataAlertDialog>
         </React.Fragment>
     );
 }

@@ -22,6 +22,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { useNavigate } from 'react-router-dom';
 import './PageHeader.css';
 
 const Search = styled('div')(({ theme }) => ({
@@ -72,7 +73,37 @@ function PageHeader() {
 
     const [openDrawer, setOpenDrawer] = React.useState(false);
 
-    const navItems = ['Home', 'About', 'Contact'];
+    const navItems = ['Home', 'About Me', 'Data Entry Form', 'Bar Chart', 'Line Chart', 'Pie Chart'];
+
+    const navigate = useNavigate();
+
+    const handleNavItemClick = (item: string) => {
+        switch (item) {
+            case 'Home':
+                navigate('/home');
+                break;
+            case 'About':
+                navigate('/about-me');
+                break;
+            case 'Contact':
+                navigate('/contact');
+                break;
+            case 'Data Entry Form':
+                navigate('/form');
+                break;
+            case 'Bar Chart':
+                navigate('/bar-chart');
+                break;
+            case 'Line Chart':
+                navigate('/line-chart');
+                break;
+            case 'Pie Chart':
+                navigate('/pie-chart');
+                break;
+            default:
+                break;
+        }
+    };
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -101,14 +132,17 @@ function PageHeader() {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ width: 250, textAlign: 'center' }}>
-            <Typography variant="h6" sx={{ m: 2 }}>
+            <Typography variant='h6' sx={{ m: 2 }}>
                 Data Entry Portal
             </Typography>
           <Divider />
           <List>
                 {navItems.map((item) => (
                     <ListItem key={item} disablePadding>
-                        <ListItemButton sx={{ textAlign: 'center' }}>
+                        <ListItemButton 
+                        sx={{ textAlign: 'center' }}
+                        onClick={() => handleNavItemClick(item)}
+                    >
                             <ListItemText primary={item} />
                         </ListItemButton>
                     </ListItem>
@@ -157,8 +191,8 @@ function PageHeader() {
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
+                <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+                    <Badge badgeContent={4} color='error'>
                         <MailIcon />
                     </Badge>
                 </IconButton>
@@ -166,11 +200,11 @@ function PageHeader() {
             </MenuItem>
             <MenuItem>
                 <IconButton
-                    size="large"
-                    aria-label="show 17 new notifications"
-                    color="inherit"
+                    size='large'
+                    aria-label='show 17 new notifications'
+                    color='inherit'
                 >
-                <Badge badgeContent={17} color="error">
+                <Badge badgeContent={17} color='error'>
                     <NotificationsIcon />
                 </Badge>
                 </IconButton>
@@ -178,11 +212,11 @@ function PageHeader() {
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
+                    size='large'
+                    aria-label='account of current user'
+                    aria-controls='primary-search-account-menu'
+                    aria-haspopup='true'
+                    color='inherit'
                 >
                     <AccountCircle />
                 </IconButton>
@@ -194,22 +228,22 @@ function PageHeader() {
     return (
         <Box sx={{ width: '100%' }}>
             <CssBaseline />
-            <AppBar position="static" id="back-to-top-anchor">
+            <AppBar position='static' id='back-to-top-anchor'>
                 <Toolbar>
                     <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open nav menu"
+                        size='large'
+                        edge='start'
+                        color='inherit'
+                        aria-label='open nav menu'
                         onClick={handleDrawerToggle}
                         sx={{ mr: 2 }}
                     >
                         <MenuIcon />
                     </IconButton>
                     <Typography
-                        variant="h6"
+                        variant='h6'
                         noWrap
-                        component="div"
+                        component='div'
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
                         Data Entry Portal
@@ -219,46 +253,46 @@ function PageHeader() {
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
-                            placeholder="Search…"
+                            placeholder='Search…'
                             inputProps={{ 'aria-label': 'search' }}
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="error">
+                        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+                            <Badge badgeContent={4} color='error'>
                                 <MailIcon />
                             </Badge>
                         </IconButton>
                         <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
+                            size='large'
+                            aria-label='show 17 new notifications'
+                            color='inherit'
                         >
-                            <Badge badgeContent={17} color="error">
+                            <Badge badgeContent={17} color='error'>
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton>
                         <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
+                            size='large'
+                            edge='end'
+                            aria-label='account of current user'
                             aria-controls={menuId}
-                            aria-haspopup="true"
+                            aria-haspopup='true'
                             onClick={handleProfileMenuOpen}
-                            color="inherit"
+                            color='inherit'
                         >
                             <AccountCircle />
                         </IconButton>
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
-                            size="large"
-                            aria-label="show more"
+                            size='large'
+                            aria-label='show more'
                             aria-controls={mobileMenuId}
-                            aria-haspopup="true"
+                            aria-haspopup='true'
                             onClick={handleMobileMenuOpen}
-                            color="inherit"
+                            color='inherit'
                         >
                             <MoreIcon />
                         </IconButton>
@@ -267,7 +301,7 @@ function PageHeader() {
             </AppBar>
             <nav>
                 <Drawer
-                    variant="temporary"
+                    variant='temporary'
                     open={openDrawer}
                     onClose={handleDrawerToggle}
                     ModalProps={{

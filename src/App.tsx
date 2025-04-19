@@ -29,25 +29,25 @@ function App(props: Props) {
   return (
     <React.Fragment>
       <QueryClientProvider client={queryClient}>
-        <PageHeader />
+        <Router>
+          <PageHeader />
           <Box sx={{ maxWidth: '100%', height: '100vh', m: 5 }}>
-            <Router>
-              <Routes>
-                {/* Define your routes here */}
-                <Route path="/home" element={<HomePage />} />
-                <Route path='/' element={<Navigate to="/home" />} />
-                <Route path="/about-me" element={<AboutMePage />} />
-                <Route path="/form" element={<DataEntryFormPage />} />
-                <Route path="/edit-form" element={<DataEditFormPage />} />
-                <Route path="/bar-chart" element={<BarChartPage />} />
-                <Route path="/line-chart" element={<LineChartPage />} />
-                <Route path="/pie-chart" element={<PieChartPage />} />
-                <Route path="/not-found" element={<NotFoundPage />} />
-                <Route path="*" element={<Navigate to="/notfound" />} />
-              </Routes>
-            </Router>
+            <Routes>
+              {/* Define your routes here */}
+              <Route path="/home" element={<HomePage />} />
+              <Route path='/' element={<Navigate to="/home" />} />
+              <Route path="/about-me" element={<AboutMePage />} />
+              <Route path="/form" element={<DataEntryFormPage />} />
+              <Route path="/edit-form" element={<DataEditFormPage />} />
+              <Route path="/bar-chart" element={<BarChartPage />} />
+              <Route path="/line-chart" element={<LineChartPage />} />
+              <Route path="/pie-chart" element={<PieChartPage />} />
+              <Route path="/not-found" element={<NotFoundPage />} />
+              <Route path="*" element={<Navigate to="/notfound" />} />
+            </Routes>
           </Box>
-        <PageFooter />
+          <PageFooter />
+        </Router>
       </QueryClientProvider>
       <ScrollTop {...props}>
         <Fab size="small" aria-label="scroll back to top">
