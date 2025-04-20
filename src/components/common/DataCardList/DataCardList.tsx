@@ -1,6 +1,10 @@
 import * as React from 'react';
 import Pagination from '@mui/material/Pagination';
 import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -38,7 +42,7 @@ function DataCardList() {
         setPage(value);
     };
 
-    const handleLimitChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleLimitChange = (event: SelectChangeEvent) => {
         setLimit(Number(event.target.value));
         setPage(1); // Reset to the first page
     };
@@ -71,29 +75,37 @@ function DataCardList() {
     return (
         <React.Fragment>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
-                <label htmlFor="limit-select">Entries per page:</label>
-                <select id="limit-select" value={limit} onChange={handleLimitChange}>
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                </select>
+                <FormControl sx={{ minWidth: 120 }} size='small'>
+                    <InputLabel id='item-per-page'>Entries per page</InputLabel>
+                    <Select
+                        labelId='demo-simple-select-label'
+                        id='demo-simple-select'
+                        value={limit.toString()}
+                        label='Age'
+                        onChange={handleLimitChange}
+                    >
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={25}>25</MenuItem>
+                    </Select>
+                </FormControl>
             </Box>
             {data?.data.map((cardData) => (
-                <Card key={cardData._id} variant="outlined" sx={{ marginBottom: 2 }}>
+                <Card key={cardData._id} variant='outlined' sx={{ marginBottom: 2 }}>
                     <CardContent>
-                        <Typography variant="h5">{cardData.productName}</Typography>
-                        <Typography color="text.secondary">{cardData.productCategory}</Typography>
+                        <Typography variant='h5'>{cardData.productName}</Typography>
+                        <Typography color='text.secondary'>{cardData.productCategory}</Typography>
                         <Typography>Submitted By: {cardData.name}</Typography>
                         <Typography>Price: ${cardData.productPrice}</Typography>
                     </CardContent>
                     <CardActions>
-                        <Tooltip title="Edit Entry">
-                            <IconButton onClick={handleEditClick} aria-label="edit button">
+                        <Tooltip title='Edit Entry'>
+                            <IconButton onClick={handleEditClick} aria-label='edit button'>
                                 <EditIcon />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Delete Entry">
-                            <IconButton onClick={handleDeleteClick} aria-label="delete button">
+                        <Tooltip title='Delete Entry'>
+                            <IconButton onClick={handleDeleteClick} aria-label='delete button'>
                                 <DeleteIcon />
                             </IconButton>
                         </Tooltip>
@@ -105,16 +117,16 @@ function DataCardList() {
                     count={data?.totalPages || 1}
                     page={page}
                     onChange={handlePageChange}
-                    color="primary"
+                    color='primary'
                 />
             </Box>
             <DataAlertDialog
                 dialogOpen={dialogOpen}
                 onDialogOpen={() => setDialogOpen(true)}
                 onDialogRes={(res) => handleDialogRes(res)}
-                dialogTitle="Delete Entry"
-                dialogAgreeLabel="Delete"
-                dialogDisagreeLabel="Cancel"
+                dialogTitle='Delete Entry'
+                dialogAgreeLabel='Delete'
+                dialogDisagreeLabel='Cancel'
             >
                 Let Google help apps determine location. This means sending anonymous
                 location data to Google, even when no apps are running.
