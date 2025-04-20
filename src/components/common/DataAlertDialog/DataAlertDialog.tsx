@@ -17,7 +17,14 @@ interface DataAlertDialogProps {
     children: React.ReactNode;
 }
 
-function DataAlertDialog({dialogTitle, dialogOpen, onDialogOpen, onDialogRes, dialogAgreeLabel, dialogDisagreeLabel, children}: DataAlertDialogProps) {
+function DataAlertDialog({
+    dialogTitle, 
+    dialogOpen, 
+    onDialogOpen, 
+    onDialogRes, 
+    dialogAgreeLabel, 
+    dialogDisagreeLabel, 
+    children}: DataAlertDialogProps) {
 
     return (
         <React.Fragment>
