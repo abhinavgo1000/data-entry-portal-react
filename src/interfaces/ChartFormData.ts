@@ -1,4 +1,4 @@
-export interface ChartFormData {
+export default interface ChartFormData {
     _id: string;
     name: string;
     email: string;

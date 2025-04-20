@@ -11,12 +11,37 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import DataAlertDialog from '../DataAlertDialog/DataAlertDialog';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import './DataCardList.css';
+import ChartFormData from '../../../interfaces/ChartFormData';
 
 function DataCardList() {
+    const [page, setPage] = React.useState(1);
+    const [limit, setLimit] = React.useState(10); // Default limit is 10
     const [dialogOpen, setDialogOpen] = React.useState(false);
 
     const navigate = useNavigate();
+
+    const fetchCardsData = async (page: number, limit: number) => {
+        const response = await axios.get(`http://localhost:5000/api/form/fetch-form-data?page=${page}&limit=${limit}`);
+        return response.data;
+    };
+
+    const { data, error, isFetching } = useQuery<{totalDocuments: number, totalPages: number, currentPage: number, data: ChartFormData[]}>({
+        queryKey: ['cardsData', page, limit],
+        queryFn: () => fetchCardsData(page, limit),
+        staleTime: 5000, // Keeps data fresh for 5 seconds
+    });
+
+    const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value);
+    };
+
+    const handleLimitChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setLimit(Number(event.target.value));
+        setPage(1); // Reset to the first page
+    };
 
     const handleEditClick = () => {
         navigate('/edit-form');
@@ -29,58 +54,67 @@ function DataCardList() {
     const handleDialogRes = (res: boolean) => {
         setDialogOpen(false);
         if (res) {
-            // Handle delete action here
             console.log('Entry deleted');
         } else {
             console.log('Delete action cancelled');
         }
     };
 
+    if (isFetching) {
+        return <Typography>Loading...</Typography>;
+    }
+
+    if (error) {
+        return <Typography>Error fetching data</Typography>;
+    }
+
     return (
         <React.Fragment>
-            <Card 
-                variant='outlined' 
-                sx={{ 
-                    width: '100%', 
-                    marginBottom: 2, 
-                    marginTop: 2, 
-                    overflowX: 'hidden' 
-                }}
-            >
-                <CardContent>
-                    <Typography variant='h5' component='div'>
-                        Card Title
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-                        Card Subtitle
-                    </Typography>
-                    <Typography variant='body2'>
-                        This is a sample card content.
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Tooltip title='Edit Entry'>
-                        <IconButton onClick={handleEditClick} aria-label='edit button'>
-                            <EditIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title='Delete Entry'>
-                        <IconButton onClick={handleDeleteClick} aria-label='delete button'>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                </CardActions>
-            </Card>
-            <Box sx={{display: 'flex', justifyContent: 'center', marginTop: 2}}>
-                <Pagination count={10} color='primary' />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
+                <label htmlFor="limit-select">Entries per page:</label>
+                <select id="limit-select" value={limit} onChange={handleLimitChange}>
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                </select>
+            </Box>
+            {data?.data.map((cardData) => (
+                <Card key={cardData._id} variant="outlined" sx={{ marginBottom: 2 }}>
+                    <CardContent>
+                        <Typography variant="h5">{cardData.productName}</Typography>
+                        <Typography color="text.secondary">{cardData.productCategory}</Typography>
+                        <Typography>Submitted By: {cardData.name}</Typography>
+                        <Typography>Price: ${cardData.productPrice}</Typography>
+                    </CardContent>
+                    <CardActions>
+                        <Tooltip title="Edit Entry">
+                            <IconButton onClick={handleEditClick} aria-label="edit button">
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete Entry">
+                            <IconButton onClick={handleDeleteClick} aria-label="delete button">
+                                <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </CardActions>
+                </Card>
+            ))}
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                <Pagination
+                    count={data?.totalPages || 1}
+                    page={page}
+                    onChange={handlePageChange}
+                    color="primary"
+                />
             </Box>
             <DataAlertDialog
                 dialogOpen={dialogOpen}
                 onDialogOpen={() => setDialogOpen(true)}
                 onDialogRes={(res) => handleDialogRes(res)}
-                dialogTitle='Delete Entry'
-                dialogAgreeLabel='Delete'
-                dialogDisagreeLabel='Cancel'
+                dialogTitle="Delete Entry"
+                dialogAgreeLabel="Delete"
+                dialogDisagreeLabel="Cancel"
             >
                 Let Google help apps determine location. This means sending anonymous
                 location data to Google, even when no apps are running.
