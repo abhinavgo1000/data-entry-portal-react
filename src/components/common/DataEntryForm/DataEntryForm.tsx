@@ -78,7 +78,7 @@ function DataEntryForm() {
             productPurchaseDate : productPurchaseDate ? productPurchaseDate.toDate() : null
         };
         mutation.mutate(formData);
-        console.log('Form submitted:', formData);
+        console.log('Form submitted:', mutation.variables);
     };
 
     {/* Check if the form is valid */}
