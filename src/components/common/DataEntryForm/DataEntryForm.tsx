@@ -54,6 +54,14 @@ function DataEntryForm() {
     const mutation = useMutation({
         mutationFn: (newData: ChartFormData) => {
             return axios.post('https://api.example.com/submit', newData);
+        },
+        onSuccess: (data, variables) => {
+            console.log('Form submitted successfully:', data);
+            console.log('Submitted data:', variables); // Log the submitted data
+        },
+        onError: (error, variables) => {
+            console.error('Error submitting form:', error);
+            console.log('Submitted data:', variables); // Log the submitted data
         }
     });
 
@@ -78,11 +86,10 @@ function DataEntryForm() {
             productPurchaseDate : productPurchaseDate ? productPurchaseDate.toDate() : null
         };
         mutation.mutate(formData);
-        console.log('Form submitted:', mutation.variables);
     };
 
     {/* Check if the form is valid */}
-    const validateForm = () => {
+    const validateForm = React.useCallback(() => {
         const isValid =
             (name !== '') &&
             (telephone !== '') &&
@@ -103,7 +110,28 @@ function DataEntryForm() {
             (productPurchaseDate !== null) &&
             productPurchaseDate.isValid();
         setFormValid(isValid);
-    };
+    }, [
+        name,
+        telephone,
+        email,
+        dateOfBirth,
+        address,
+        city,
+        state,
+        zip,
+        country,
+        productName,
+        productType,
+        productCategory,
+        productBrand,
+        productPrice,
+        productModel,
+        productPurchaseDate
+    ]);
+
+    React.useEffect(() => {
+        validateForm();
+    }, [name, telephone, email, dateOfBirth, address, city, state, zip, country, productName, productType, productCategory, productBrand, productPrice, productModel, productPurchaseDate, validateForm]);
 
     {/* Define the change handlers for each input field */}
 
