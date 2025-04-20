@@ -31,7 +31,7 @@ function App(props: Props) {
       <QueryClientProvider client={queryClient}>
         <Router>
           <PageHeader />
-          <Box sx={{ maxWidth: '100%', height: '100vh', m: 5 }}>
+          <Box sx={{ maxWidth: '100%', minHeight: '100vh', m: 5 }}>
             <Routes>
               {/* Define your routes here */}
               <Route path="/home" element={<HomePage />} />
