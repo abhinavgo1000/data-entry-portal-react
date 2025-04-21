@@ -23,7 +23,9 @@ import ChartFormData from '../../../interfaces/ChartFormData';
 function DataCardList() {
     const [page, setPage] = React.useState(1);
     const [limit, setLimit] = React.useState(10); // Default limit is 10
+
     const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [selectedProductName, setSelectedProductName] = React.useState('');
 
     const navigate = useNavigate();
 
@@ -51,7 +53,8 @@ function DataCardList() {
         navigate('/edit-form');
     };
 
-    const handleDeleteClick = () => {
+    const handleDeleteClick = (productName: string) => {
+        setSelectedProductName(productName);
         setDialogOpen(true);
     };
 
@@ -96,7 +99,10 @@ function DataCardList() {
                         <Typography variant='h5'>{cardData.productName}</Typography>
                         <Typography color='text.secondary'>{cardData.productCategory}</Typography>
                         <Typography>Submitted By: {cardData.name}</Typography>
+                        <Typography>Contact Number: {cardData.telephone}</Typography>
+                        <Typography>Purchased on: {cardData.productPurchaseDate ? cardData.productPurchaseDate.toLocaleString() : 'N/A'}</Typography>
                         <Typography>Price: ${cardData.productPrice}</Typography>
+                        <Typography>Model: {cardData.productModel}</Typography>
                     </CardContent>
                     <CardActions>
                         <Tooltip title='Edit Entry'>
@@ -105,7 +111,10 @@ function DataCardList() {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title='Delete Entry'>
-                            <IconButton onClick={handleDeleteClick} aria-label='delete button'>
+                            <IconButton 
+                                onClick={() => handleDeleteClick(cardData.productName)} 
+                                aria-label='delete button'
+                            >
                                 <DeleteIcon />
                             </IconButton>
                         </Tooltip>
@@ -128,8 +137,9 @@ function DataCardList() {
                 dialogAgreeLabel='Delete'
                 dialogDisagreeLabel='Cancel'
             >
-                Let Google help apps determine location. This means sending anonymous
-                location data to Google, even when no apps are running.
+                {selectedProductName
+                    ? `Are you sure you want to delete the entry for "${selectedProductName}"?`
+                    : 'Are you sure you want to delete this entry?'}
             </DataAlertDialog>
         </React.Fragment>
     );
