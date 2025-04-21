@@ -97,12 +97,12 @@ function DataCardList() {
                 <Card key={cardData._id} variant='outlined' sx={{ marginBottom: 2 }}>
                     <CardContent>
                         <Typography variant='h5'>{cardData.productName}</Typography>
-                        <Typography color='text.secondary'>{cardData.productCategory}</Typography>
-                        <Typography>Submitted By: {cardData.name}</Typography>
-                        <Typography>Contact Number: {cardData.telephone}</Typography>
-                        <Typography>Purchased on: {cardData.productPurchaseDate ? cardData.productPurchaseDate.toLocaleString() : 'N/A'}</Typography>
-                        <Typography>Price: ${cardData.productPrice}</Typography>
-                        <Typography>Model: {cardData.productModel}</Typography>
+                        <Typography variant='subtitle1' color='text.secondary'>{cardData.productCategory}</Typography>
+                        <Typography variant='body1'>Submitted By: {cardData.name}</Typography>
+                        <Typography variant='body1'>Contact Number: {cardData.telephone}</Typography>
+                        <Typography variant='body1'>Purchased on: {cardData.productPurchaseDate ? cardData.productPurchaseDate.toLocaleString() : 'N/A'}</Typography>
+                        <Typography variant='body1'>Price: ${cardData.productPrice}</Typography>
+                        <Typography variant='body1'>Model: {cardData.productModel}</Typography>
                     </CardContent>
                     <CardActions>
                         <Tooltip title='Edit Entry'>
