@@ -5,6 +5,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import dayjs, { Dayjs } from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios'; 
@@ -50,6 +53,8 @@ function DataEntryForm() {
 
     const [formValid, setFormValid] = React.useState(false);
 
+    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+
     const mutation = useMutation({
         mutationFn: (newData: {
             name: string;
@@ -79,6 +84,26 @@ function DataEntryForm() {
         }
     });
 
+    const resetForm = () => {
+        setName('');
+        setTelephone('');
+        setDateOfBirth(dayjs(''));
+        setEmail('');
+        setAddress('');
+        setCity('');
+        setState('');
+        setZip('');
+        setCountry('');
+        setProductName('');
+        setProductType('');
+        setProductCategory('');
+        setProductBrand('');
+        setProductPrice(0);
+        setProductModel('');
+        setProductPurchaseDate(dayjs(''));
+        setFormValid(false); // Reset form validation
+    };
+
     const handleSubmit = () => {
         const formData = {
             name,
@@ -99,7 +124,32 @@ function DataEntryForm() {
             productPurchaseDate : productPurchaseDate ? productPurchaseDate.toDate() : null
         };
         mutation.mutate(formData);
+        setSnackbarOpen(true);
+        resetForm(); // Reset the form after submission
     };
+
+    const handleSnackbarClose = (
+        _event: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+    ) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+
+    const action = (
+        <React.Fragment>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleSnackbarClose}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    );
 
     {/* Check if the form is valid */}
     const validateForm = React.useCallback(() => {
@@ -492,6 +542,12 @@ function DataEntryForm() {
                     disabled={!formValid}
                     variant='contained'>Submit</Button>
                 </div>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={handleSnackbarClose}
+                    message='Form submitted successfully!'
+                    action={action} />
             </Box>
         </React.Fragment>
     );
