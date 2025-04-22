@@ -49,12 +49,12 @@ function DataCardList() {
         setPage(1); // Reset to the first page
     };
 
-    const handleEditClick = () => {
-        navigate('/edit-form');
+    const handleEditClick = (id: string) => {
+        navigate(`/edit-form?id=${id}`);
     };
 
-    const handleDeleteClick = (productName: string) => {
-        setSelectedProductName(productName);
+    const handleDeleteClick = (cardData: ChartFormData) => {
+        setSelectedProductName(cardData.productName);
         setDialogOpen(true);
     };
 
@@ -121,13 +121,13 @@ function DataCardList() {
                     </CardContent>
                     <CardActions>
                         <Tooltip title='Edit Entry'>
-                            <IconButton onClick={handleEditClick} aria-label='edit button'>
+                            <IconButton onClick={() => handleEditClick(cardData._id)} aria-label='edit button'>
                                 <EditIcon />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title='Delete Entry'>
                             <IconButton 
-                                onClick={() => handleDeleteClick(cardData.productName)} 
+                                onClick={() => handleDeleteClick(cardData)} 
                                 aria-label='delete button'
                             >
                                 <DeleteIcon />
