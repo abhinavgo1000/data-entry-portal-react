@@ -67,6 +67,21 @@ function DataCardList() {
         }
     };
 
+    const formatDate = (date: string | Date) => {
+        const d = new Date(date);
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: '2-digit' };
+        return d.toLocaleDateString(undefined, options);
+    };
+
+    const formatTelephone = (telephone: string) => {
+        const cleaned = ('' + telephone).replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            return `(${match[1]}) ${match[2]}-${match[3]}`;
+        }
+        return telephone;
+    };
+
     if (isFetching) {
         return <Typography>Loading...</Typography>;
     }
@@ -99,8 +114,8 @@ function DataCardList() {
                         <Typography variant='h5'>{cardData.productName}</Typography>
                         <Typography variant='subtitle1' color='text.secondary'>{cardData.productCategory}</Typography>
                         <Typography variant='body1'>Submitted By: {cardData.name}</Typography>
-                        <Typography variant='body1'>Contact Number: {cardData.telephone}</Typography>
-                        <Typography variant='body1'>Purchased on: {cardData.productPurchaseDate ? cardData.productPurchaseDate.toLocaleString() : 'N/A'}</Typography>
+                        <Typography variant='body1'>Contact Number: {formatTelephone(cardData.telephone)}</Typography>
+                        <Typography variant='body1'>Purchased on: {cardData.productPurchaseDate ? formatDate(cardData.productPurchaseDate) : 'N/A'}</Typography>
                         <Typography variant='body1'>Price: ${cardData.productPrice}</Typography>
                         <Typography variant='body1'>Model: {cardData.productModel}</Typography>
                     </CardContent>
