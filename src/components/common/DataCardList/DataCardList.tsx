@@ -10,7 +10,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
@@ -130,7 +130,7 @@ function DataCardList() {
                                 onClick={() => handleDeleteClick(cardData)} 
                                 aria-label='delete button'
                             >
-                                <DeleteIcon />
+                                <DeleteOutlineIcon />
                             </IconButton>
                         </Tooltip>
                     </CardActions>
