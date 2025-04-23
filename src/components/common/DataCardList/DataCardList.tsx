@@ -26,6 +26,7 @@ function DataCardList() {
 
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [selectedProductName, setSelectedProductName] = React.useState('');
+    const [selectedEntryId, setSelectedEntryId] = React.useState<string | null>(null);
 
     const navigate = useNavigate();
 
@@ -55,16 +56,25 @@ function DataCardList() {
 
     const handleDeleteClick = (cardData: ChartFormData) => {
         setSelectedProductName(cardData.productName);
+        setSelectedEntryId(cardData._id);
         setDialogOpen(true);
     };
 
-    const handleDialogRes = (res: boolean) => {
+    const handleDialogRes = async (res: boolean) => {
         setDialogOpen(false);
-        if (res) {
-            console.log('Entry deleted');
+        if (res && selectedEntryId) {
+            try {
+                await axios.delete(`http://localhost:5000/api/form/delete-form-data/${selectedEntryId}`);
+                console.log(`Entry with ID ${selectedEntryId} deleted successfully`);
+                setPage(1); // Reset to the first page
+            } catch (error) {
+                console.error('Error deleting entry:', error);
+            }
         } else {
             console.log('Delete action cancelled');
         }
+        setSelectedEntryId(null); // Reset the selected entry ID
+        setSelectedProductName(''); // Reset the selected product name
     };
 
     const formatDate = (date: string | Date) => {
