@@ -14,10 +14,10 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
-import DataAlertDialog from '../DataAlertDialog/DataAlertDialog';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import './DataCardList.css';
+import DataAlertDialog from '../DataAlertDialog/DataAlertDialog';
 import ChartFormData from '../../../interfaces/ChartFormData';
 
 function DataCardList() {
