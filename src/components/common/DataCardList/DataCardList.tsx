@@ -20,13 +20,46 @@ import './DataCardList.css';
 import DataAlertDialog from '../DataAlertDialog/DataAlertDialog';
 import ChartFormData from '../../../interfaces/ChartFormData';
 
-function DataCardList() {
-    const [page, setPage] = React.useState(1);
-    const [limit, setLimit] = React.useState(10); // Default limit is 10
+const initialState = {
+    page: 1,
+    limit: 10,
+    dialogOpen: false,
+    selectedProductName: '',
+    selectedEntryId: null as string | null,
+};
 
-    const [dialogOpen, setDialogOpen] = React.useState(false);
-    const [selectedProductName, setSelectedProductName] = React.useState('');
-    const [selectedEntryId, setSelectedEntryId] = React.useState<string | null>(null);
+type Action =
+    | { type: 'SET_PAGE'; payload: number }
+    | { type: 'SET_LIMIT'; payload: number }
+    | { type: 'OPEN_DIALOG'; payload: { productName: string; entryId: string } }
+    | { type: 'CLOSE_DIALOG' }
+    | { type: 'RESET_SELECTED' };
+
+const reducer = (state: typeof initialState, action: Action) => {
+    switch (action.type) {
+        case 'SET_PAGE':
+            return { ...state, page: action.payload };
+        case 'SET_LIMIT':
+            return { ...state, limit: action.payload, page: 1 }; // Reset to the first page
+        case 'OPEN_DIALOG':
+            return {
+                ...state,
+                dialogOpen: true,
+                selectedProductName: action.payload.productName,
+                selectedEntryId: action.payload.entryId,
+            };
+        case 'CLOSE_DIALOG':
+            return { ...state, dialogOpen: false };
+        case 'RESET_SELECTED':
+            return { ...state, selectedProductName: '', selectedEntryId: null };
+        default:
+            return state;
+    }
+};
+
+function DataCardList() {
+    
+    const [state, dispatch] = React.useReducer(reducer, initialState);
 
     const navigate = useNavigate();
 
@@ -36,18 +69,17 @@ function DataCardList() {
     };
 
     const { data, error, isFetching } = useQuery<{totalDocuments: number, totalPages: number, currentPage: number, data: ChartFormData[]}>({
-        queryKey: ['cardsData', page, limit],
-        queryFn: () => fetchCardsData(page, limit),
+        queryKey: ['cardsData', state.page, state.limit],
+        queryFn: () => fetchCardsData(state.page, state.limit),
         staleTime: 5000, // Keeps data fresh for 5 seconds
     });
 
     const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
-        setPage(value);
+        dispatch({ type: 'SET_PAGE', payload: value });
     };
 
     const handleLimitChange = (event: SelectChangeEvent) => {
-        setLimit(Number(event.target.value));
-        setPage(1); // Reset to the first page
+        dispatch({ type: 'SET_LIMIT', payload: Number(event.target.value) });
     };
 
     const handleEditClick = (id: string) => {
@@ -55,26 +87,26 @@ function DataCardList() {
     };
 
     const handleDeleteClick = (cardData: ChartFormData) => {
-        setSelectedProductName(cardData.productName);
-        setSelectedEntryId(cardData._id);
-        setDialogOpen(true);
+        dispatch({
+            type: 'OPEN_DIALOG',
+            payload: { productName: cardData.productName, entryId: cardData._id },
+        });
     };
 
     const handleDialogRes = async (res: boolean) => {
-        setDialogOpen(false);
-        if (res && selectedEntryId) {
+        dispatch({ type: 'CLOSE_DIALOG' });
+        if (res && state.selectedEntryId) {
             try {
-                await axios.delete(`http://localhost:5000/api/form/delete-form-data/${selectedEntryId}`);
-                console.log(`Entry with ID ${selectedEntryId} deleted successfully`);
-                setPage(1); // Reset to the first page
+                await axios.delete(`http://localhost:5000/api/form/delete-form-data/${state.selectedEntryId}`);
+                console.log(`Entry with ID ${state.selectedEntryId} deleted successfully`);
+                dispatch({ type: 'SET_PAGE', payload: 1 }); // Reset to the first page
             } catch (error) {
                 console.error('Error deleting entry:', error);
             }
         } else {
             console.log('Delete action cancelled');
         }
-        setSelectedEntryId(null); // Reset the selected entry ID
-        setSelectedProductName(''); // Reset the selected product name
+        dispatch({ type: 'RESET_SELECTED' });
     };
 
     const formatDate = (date: string | Date) => {
@@ -108,7 +140,7 @@ function DataCardList() {
                     <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
-                        value={limit.toString()}
+                        value={state.limit.toString()}
                         label='Age'
                         onChange={handleLimitChange}
                     >
@@ -149,21 +181,21 @@ function DataCardList() {
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
                 <Pagination
                     count={data?.totalPages || 1}
-                    page={page}
+                    page={state.page}
                     onChange={handlePageChange}
                     color='primary'
                 />
             </Box>
             <DataAlertDialog
-                dialogOpen={dialogOpen}
-                onDialogOpen={() => setDialogOpen(true)}
+                dialogOpen={state.dialogOpen}
+                onDialogOpen={() => dispatch({ type: 'OPEN_DIALOG', payload: { productName: '', entryId: '' } })}
                 onDialogRes={(res) => handleDialogRes(res)}
                 dialogTitle='Delete Entry'
                 dialogAgreeLabel='Delete'
                 dialogDisagreeLabel='Cancel'
             >
-                {selectedProductName
-                    ? `Are you sure you want to delete the entry for "${selectedProductName}"?`
+                {state.selectedProductName
+                    ? `Are you sure you want to delete the entry for "${state.selectedProductName}"?`
                     : 'Are you sure you want to delete this entry?'}
             </DataAlertDialog>
         </React.Fragment>

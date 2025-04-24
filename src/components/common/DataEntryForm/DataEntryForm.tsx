@@ -8,52 +8,76 @@ import Button from '@mui/material/Button';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios'; 
 import './DataEntryForm.css';
 
+const initialState = {
+    name: '',
+    telephone: '',
+    dateOfBirth: dayjs(''),
+    email: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: '',
+    productName: '',
+    productType: '',
+    productCategory: '',
+    productBrand: '',
+    productPrice: 0,
+    productModel: '',
+    productPurchaseDate: dayjs(''),
+    errors: {
+        name: false,
+        telephone: false,
+        email: false,
+        dateOfBirth: false,
+        address: false,
+        city: false,
+        state: false,
+        zip: false,
+        country: false,
+        productName: false,
+        productType: false,
+        productCategory: false,
+        productBrand: false,
+        productPrice: false,
+        productModel: false,
+        productPurchaseDate: false,
+    },
+    snackbarOpen: false,
+};
+
+type Action =
+    | { type: 'SET_FIELD'; field: keyof typeof initialState; value: string | number | dayjs.Dayjs | boolean }
+    | { type: 'SET_ERROR'; field: string; value: boolean }
+    | { type: 'SET_FORM_VALID'; value: boolean }
+    | { type: 'RESET_FORM' }
+    | { type: 'SET_SNACKBAR'; value: boolean };
+
+const reducer = (state: typeof initialState, action: Action) => {
+    switch (action.type) {
+        case 'SET_FIELD':
+            return { ...state, [action.field]: action.value };
+        case 'SET_ERROR':
+            return { ...state, errors: { ...state.errors, [action.field]: action.value } };
+        case 'RESET_FORM':
+            return initialState;
+        case 'SET_SNACKBAR':
+            return { ...state, snackbarOpen: action.value };
+        default:
+            return state;
+    }
+};
+
 function DataEntryForm() {
 
-    {/* Define the mutation for submitting the form data */}
-    const [name, setName] = React.useState('');
-    const [telephone, setTelephone] = React.useState('');
-    const [dateOfBirth, setDateOfBirth] = React.useState<Dayjs | null>(dayjs(''));
-    const [email, setEmail] = React.useState('');
-    const [address, setAddress] = React.useState('');
-    const [city, setCity] = React.useState('');
-    const [state, setState] = React.useState('');
-    const [zip, setZip] = React.useState('');
-    const [country, setCountry] = React.useState('');
-    const [productName, setProductName] = React.useState('');
-    const [productType, setProductType] = React.useState('');
-    const [productCategory, setProductCategory] = React.useState('');
-    const [productBrand, setProductBrand] = React.useState('');
-    const [productPrice, setProductPrice] = React.useState(0);
-    const [productModel, setProductModel] = React.useState('');
-    const [productPurchaseDate, setProductPurchaseDate] = React.useState<Dayjs | null>(dayjs(''));
+    const [state, dispatch] = React.useReducer(reducer, initialState);
 
-    {/* Define the error states of form fields */}
-    const [nameError, setNameError] = React.useState(false);
-    const [telephoneError, setTelephoneError] = React.useState(false);
-    const [emailError, setEmailError] = React.useState(false);
-    const [dateOfBirthError, setDateOfBirthError] = React.useState(false);
-    const [addressError, setAddressError] = React.useState(false);
-    const [cityError, setCityError] = React.useState(false);
-    const [stateError, setStateError] = React.useState(false);
-    const [zipError, setZipError] = React.useState(false);
-    const [countryError, setCountryError] = React.useState(false);
-    const [productNameError, setProductNameError] = React.useState(false);
-    const [productTypeError, setProductTypeError] = React.useState(false);
-    const [productCategoryError, setProductCategoryError] = React.useState(false);
-    const [productBrandError, setProductBrandError] = React.useState(false);
-    const [productPriceError, setProductPriceError] = React.useState(false);
-    const [productModelError, setProductModelError] = React.useState(false);
-    const [productPurchaseDateError, setProductPurchaseDateError] = React.useState(false);
-
-    const [formValid, setFormValid] = React.useState(false);
-
-    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const [isSubmissionSuccessful, setIsSubmissionSuccessful] = React.useState(false);
 
     const mutation = useMutation({
         mutationFn: (newData: {
@@ -84,58 +108,48 @@ function DataEntryForm() {
         }
     });
 
-    const resetForm = () => {
-        setName('');
-        setTelephone('');
-        setDateOfBirth(dayjs(''));
-        setEmail('');
-        setAddress('');
-        setCity('');
-        setState('');
-        setZip('');
-        setCountry('');
-        setProductName('');
-        setProductType('');
-        setProductCategory('');
-        setProductBrand('');
-        setProductPrice(0);
-        setProductModel('');
-        setProductPurchaseDate(dayjs(''));
-        setFormValid(false); // Reset form validation
-    };
-
     const handleSubmit = () => {
         const formData = {
-            name,
-            email,
-            telephone,
-            dateOfBirth: dateOfBirth ? dateOfBirth.toDate() : null,
-            address,
-            city,
-            state,
-            zip,
-            country,
-            productName,
-            productType,
-            productCategory,
-            productBrand,
-            productPrice,
-            productModel,
-            productPurchaseDate : productPurchaseDate ? productPurchaseDate.toDate() : null
+            name: state.name,
+            telephone: state.telephone,
+            dateOfBirth: state.dateOfBirth ? state.dateOfBirth.toDate() : null,
+            email: state.email,
+            address: state.address,
+            city: state.city,
+            state: state.state,
+            zip: state.zip,
+            country: state.country,
+            productName: state.productName,
+            productType: state.productType,
+            productCategory: state.productCategory,
+            productBrand: state.productBrand,
+            productPrice: state.productPrice,
+            productModel: state.productModel,
+            productPurchaseDate: state.productPurchaseDate ? state.productPurchaseDate.toDate() : null
         };
-        mutation.mutate(formData);
-        setSnackbarOpen(true);
-        resetForm(); // Reset the form after submission
+        mutation.mutate(formData, {
+            onSuccess: () => {
+                setIsSubmissionSuccessful(true);
+                dispatch({ type: 'RESET_FORM' }); // Reset the form
+            },
+            onError: (error) => {
+                console.error('Error submitting form:', error);
+            },
+        });
     };
 
-    const handleSnackbarClose = (
-        _event: React.SyntheticEvent | Event,
-        reason?: SnackbarCloseReason,
-    ) => {
+    React.useEffect(() => {
+        if (isSubmissionSuccessful) {
+            dispatch({ type: 'SET_SNACKBAR', value: true }); // Open Snackbar
+            setIsSubmissionSuccessful(false); // Reset the submission success state
+        }
+    }, [isSubmissionSuccessful]);
+
+    const handleSnackbarClose = (_event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setSnackbarOpen(false);
+        dispatch({ type: 'SET_SNACKBAR', value: false });
     };
 
     const action = (
@@ -144,218 +158,24 @@ function DataEntryForm() {
                 size="small"
                 aria-label="close"
                 color="inherit"
-                onClick={handleSnackbarClose}
+                onClick={(event) => handleSnackbarClose(event)}
             >
                 <CloseIcon fontSize="small" />
             </IconButton>
         </React.Fragment>
     );
 
-    {/* Check if the form is valid */}
-    const validateForm = React.useCallback(() => {
-        const isValid =
-            (name !== '') &&
-            (telephone !== '') &&
-            (email !== '') &&
-            (dateOfBirth !== null) &&
-            dateOfBirth.isValid() &&
-            (address !== '') &&
-            (city !== '') &&
-            (state !== '') &&
-            (zip !== '') &&
-            (country !== '') &&
-            (productName !== '') &&
-            (productType !== '') &&
-            (productCategory !== '') &&
-            (productBrand !== '') &&
-            (productPrice > 0) &&
-            (productModel !== '') &&
-            (productPurchaseDate !== null) &&
-            productPurchaseDate.isValid();
-        setFormValid(isValid);
-    }, [
-        name,
-        telephone,
-        email,
-        dateOfBirth,
-        address,
-        city,
-        state,
-        zip,
-        country,
-        productName,
-        productType,
-        productCategory,
-        productBrand,
-        productPrice,
-        productModel,
-        productPurchaseDate
-    ]);
+    
 
-    React.useEffect(() => {
-        validateForm();
-    }, [name, telephone, email, dateOfBirth, address, city, state, zip, country, productName, productType, productCategory, productBrand, productPrice, productModel, productPurchaseDate, validateForm]);
+    const isFormValid = React.useMemo(() => {
+        return Object.values(state).every((value) => value !== '' && value !== null);
+    }, [state]);
 
     {/* Define the change handlers for each input field */}
 
-    const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-        if (event.target.validity.valid) {
-            setNameError(false);
-        } else {
-            setNameError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeTelephone = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTelephone(event.target.value);
-        if (event.target.validity.valid) {
-            setTelephoneError(false);
-        } else {
-            setTelephoneError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(event.target.value);
-        if (event.target.validity.valid) {
-            setEmailError(false);
-        } else {
-            setEmailError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeDateOfBirth = (newValue: Dayjs | null) => {
-        setDateOfBirth(newValue);
-        if (newValue && newValue.isValid()) {
-            setDateOfBirthError(false);
-        } else {
-            setDateOfBirthError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAddress(event.target.value);
-        if (event.target.validity.valid) {
-            setAddressError(false);
-        } else {
-            setAddressError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeCity = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCity(event.target.value);
-        if (event.target.validity.valid) {
-            setCityError(false);
-        } else {
-            setCityError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeState = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setState(event.target.value);
-        if (event.target.validity.valid) {
-            setStateError(false);
-        } else {
-            setStateError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeZip = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setZip(event.target.value);
-        if (event.target.validity.valid) {
-            setZipError(false);
-        } else {
-            setZipError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeCountry = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCountry(event.target.value);
-        if (event.target.validity.valid) {
-            setCountryError(false);
-        } else {
-            setCountryError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeProductName = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProductName(event.target.value);
-        if (event.target.validity.valid) {
-            setProductNameError(false);
-        } else {
-            setProductNameError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeProductType = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProductType(event.target.value);
-        if (event.target.validity.valid) {
-            setProductTypeError(false);
-        } else {
-            setProductTypeError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeProductCategory = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProductCategory(event.target.value);
-        if (event.target.validity.valid) {
-            setProductCategoryError(false);
-        } else {
-            setProductCategoryError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeProductBrand = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProductBrand(event.target.value);
-        if (event.target.validity.valid) {
-            setProductBrandError(false);
-        } else {
-            setProductBrandError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeProductPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProductPrice(Number(event.target.value));
-        if (event.target.validity.valid) {
-            setProductPriceError(false);
-        } else {
-            setProductPriceError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeProductModel = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProductModel(event.target.value);
-        if (event.target.validity.valid) {
-            setProductModelError(false);
-        } else {
-            setProductModelError(true);
-        }
-        validateForm();
-    };
-
-    const handleChangeProductPurchaseDate = (newValue: Dayjs | null) => {
-        setProductPurchaseDate(newValue);
-        if (newValue && newValue.isValid()) {
-            setProductPurchaseDateError(false);
-        } else {
-            setProductPurchaseDateError(true);
-        }
-        validateForm();
+    const handleChange = (field: keyof typeof initialState, value: string | number | dayjs.Dayjs | null) => {
+        dispatch({ type: 'SET_FIELD', field, value: value ?? '' });
+        dispatch({ type: 'SET_ERROR', field, value: value === '' });
     };
 
     return (
@@ -369,181 +189,181 @@ function DataEntryForm() {
                 <TextField
                     label='Name'
                     sx={{ mb: 4 }}
-                    value={name}
+                    value={state.name}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeName}
-                    error={nameError}
-                    helperText={nameError ? 'Please enter the correct name' : ''} />
+                    onChange={(e) => handleChange('name', e.target.value)}
+                    error={state.errors.name}
+                    helperText={state.errors.name ? 'Please enter the correct name' : ''} />
                 <TextField
                     label='Telephone'
                     sx={{ mb: 4 }}
-                    value={telephone}
+                    value={state.telephone}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeTelephone}
-                    error={telephoneError}
-                    helperText={nameError ? 'Please enter the correct name' : ''} />
+                    onChange={(e) => handleChange('telephone', e.target.value)}
+                    error={state.errors.telephone}
+                    helperText={state.errors.telephone ? 'Please enter the correct name' : ''} />
                 <TextField
                     label='Email'
                     sx={{ mb: 4 }}
-                    value={email}
+                    value={state.email}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeEmail}
-                    error={emailError}
-                    helperText={emailError ? 'Please enter the correct email' : ''} />
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    error={state.errors.email}
+                    helperText={state.errors.email ? 'Please enter the correct email' : ''} />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                         label='Date of Birth'
-                        value={dateOfBirth}
+                        value={state.dateOfBirth}
                         slotProps={{ 
                             textField: { 
                                 variant: 'filled', 
                                 fullWidth: true, 
                                 required: true,
-                                error: dateOfBirthError,
-                                helperText: dateOfBirthError ? 'Please enter the correct date of birth' : '' 
+                                error: state.errors.dateOfBirth,
+                                helperText: state.errors.dateOfBirth ? 'Please enter the correct date of birth' : '' 
                             } }}
                         sx={{ mb: 4 }}
-                        onChange={handleChangeDateOfBirth} />
+                        onChange={(newValue) => handleChange('dateOfBirth', newValue)} />
                 </LocalizationProvider>
                 <TextField
                     label='Address'
                     sx={{ mb: 4 }}
-                    value={address}
+                    value={state.address}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeAddress}
-                    error={addressError}
-                    helperText={addressError ? 'Please enter the correct address' : ''} />
+                    onChange={(e) => handleChange('address', e.target.value)}
+                    error={state.errors.address}
+                    helperText={state.errors.address ? 'Please enter the correct address' : ''} />
                 <TextField
                     label='City'
                     sx={{ mb: 4 }}
-                    value={city}
+                    value={state.city}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeCity}
-                    error={cityError}
-                    helperText={cityError ? 'Please enter the correct city' : ''} />
+                    onChange={(e) => handleChange('city', e.target.value)}
+                    error={state.errors.city}
+                    helperText={state.errors.city ? 'Please enter the correct city' : ''} />
                 <TextField
                     label='State'
                     sx={{ mb: 4 }}
-                    value={state}
+                    value={state.state}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeState}
-                    error={stateError}
-                    helperText={stateError ? 'Please enter the correct state' : ''} />
+                    onChange={(e) => handleChange('state', e.target.value)}
+                    error={state.errors.state}
+                    helperText={state.errors.state ? 'Please enter the correct state' : ''} />
                 <TextField
                     label='Zip'
                     sx={{ mb: 4 }}
-                    value={zip}
+                    value={state.zip}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeZip}
-                    error={zipError}
-                    helperText={zipError ? 'Please enter the correct zip' : ''} />
+                    onChange={(e) => handleChange('zip', e.target.value)}
+                    error={state.errors.zip}
+                    helperText={state.errors.zip ? 'Please enter the correct zip' : ''} />
                 <TextField
                     label='Country'
                     sx={{ mb: 4 }}
-                    value={country}
+                    value={state.country}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeCountry}
-                    error={countryError}
-                    helperText={countryError ? 'Please enter the correct country' : ''} />
+                    onChange={(e) => handleChange('country', e.target.value)}
+                    error={state.errors.country}
+                    helperText={state.errors.country ? 'Please enter the correct country' : ''} />
                 <TextField
                     label='Product Name'
                     sx={{ mb: 4 }}
-                    value={productName}
+                    value={state.productName}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeProductName}
-                    error={productNameError}
-                    helperText={productNameError ? 'Please enter the correct product name' : ''} />
+                    onChange={(e) => handleChange('productName', e.target.value)}
+                    error={state.errors.productName}
+                    helperText={state.errors.productName ? 'Please enter the correct product name' : ''} />
                 <TextField
                     label='Product Type'
                     sx={{ mb: 4 }}
-                    value={productType}
+                    value={state.productType}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeProductType}
-                    error={productTypeError}
-                    helperText={productTypeError ? 'Please enter the correct product type' : ''} />
+                    onChange={(e) => handleChange('productType', e.target.value)}
+                    error={state.errors.productType}
+                    helperText={state.errors.productType ? 'Please enter the correct product type' : ''} />
                 <TextField
                     label='Product Category'
                     sx={{ mb: 4 }}
-                    value={productCategory}
+                    value={state.productCategory}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeProductCategory}
-                    error={productCategoryError}
-                    helperText={productCategoryError ? 'Please enter the correct product category' : ''} />
+                    onChange={(e) => handleChange('productCategory', e.target.value)}
+                    error={state.errors.productCategory}
+                    helperText={state.errors.productCategory ? 'Please enter the correct product category' : ''} />
                 <TextField
                     label='Product Brand'
                     sx={{ mb: 4 }}
-                    value={productBrand}
+                    value={state.productBrand}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeProductBrand}
-                    error={productBrandError}
-                    helperText={productBrandError ? 'Please enter the correct product brand' : ''} />
+                    onChange={(e) => handleChange('productBrand', e.target.value)}
+                    error={state.errors.productBrand}
+                    helperText={state.errors.productBrand ? 'Please enter the correct product brand' : ''} />
                 <TextField
                     label='Product Price'
                     sx={{ mb: 4 }}
-                    value={productPrice}
+                    value={state.productPrice}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeProductPrice}
-                    error={productPriceError}
-                    helperText={productPriceError ? 'Please enter the correct product price' : ''} />
+                    onChange={(e) => handleChange('productPrice', e.target.value)}
+                    error={state.errors.productPrice}
+                    helperText={state.errors.productPrice ? 'Please enter the correct product price' : ''} />
                 <TextField
                     label='Product Model'
                     sx={{ mb: 4 }}
-                    value={productModel}
+                    value={state.productModel}
                     required
                     variant='filled'
                     fullWidth
-                    onChange={handleChangeProductModel}
-                    error={productModelError}
-                    helperText={productModelError ? 'Please enter the correct product model' : ''} />
+                    onChange={(e) => handleChange('productModel', e.target.value)}
+                    error={state.errors.productModel}
+                    helperText={state.errors.productModel ? 'Please enter the correct product model' : ''} />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                         label='Product Purchase Date'
-                        value={productPurchaseDate}
+                        value={state.productPurchaseDate}
                         slotProps={{ 
                             textField: { 
                                 variant: 'filled', 
                                 fullWidth: true, 
                                 required: true,
-                                error: productPurchaseDateError,
-                                helperText: productPurchaseDateError ? 'Please enter the correct product purchase date' : '' 
+                                error: state.errors.productPurchaseDate,
+                                helperText: state.errors.productPurchaseDate ? 'Please enter the correct product purchase date' : '' 
                             } }}
                         sx={{ mb: 4 }}
-                        onChange={handleChangeProductPurchaseDate} />
+                        onChange={(newValue) => handleChange('productPurchaseDate', newValue)} />
                 </LocalizationProvider>
                 <div>
                     <Button 
-                    onClick={handleSubmit} 
-                    disabled={!formValid}
-                    variant='contained'>Submit</Button>
+                        onClick={handleSubmit} 
+                        disabled={!isFormValid}
+                        variant='contained'>Submit</Button>
                 </div>
                 <Snackbar
-                    open={snackbarOpen}
+                    open={state.snackbarOpen}
                     autoHideDuration={3000}
                     onClose={handleSnackbarClose}
                     message='Form submitted successfully!'
