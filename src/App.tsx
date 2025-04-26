@@ -14,6 +14,7 @@ import BarChartPage from './components/pages/BarChartPage/BarChartPage';
 import LineChartPage from './components/pages/LineChartPage/LineChartPage';
 import PieChartPage from './components/pages/PieChartPage/PieChartPage';
 import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
+import BreadCrumbNav from './components/common/BreadCrumbNav/BreadCrumbNav';
 import ScrollTop from './components/common/ScrollTop/ScrollTop';
 import './App.css';
 
@@ -32,6 +33,7 @@ function App(props: Props) {
         <Router>
           <PageHeader />
           <Box sx={{ maxWidth: '100%', minHeight: '100vh', m: 5 }}>
+            <BreadCrumbNav />
             <Routes>
               {/* Define your routes here */}
               <Route path='/home' element={<HomePage />} />
