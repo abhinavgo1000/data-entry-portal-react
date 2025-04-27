@@ -5,10 +5,12 @@ import axios from 'axios';
 import './LineChart.css';
 import ChartFormData from '../../../interfaces/ChartFormData';
 
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL;
+
 function LineChart() {
 
     const fetchChartData = async () => {
-        const response = await axios.get('http://localhost:5000/api/form/fetch-all-data');
+        const response = await axios.get(`${API_BASE_URL}/api/form/fetch-all-data`);
         return response.data;
     };
 

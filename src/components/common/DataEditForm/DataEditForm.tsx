@@ -12,6 +12,8 @@ import axios from 'axios';
 import { useSnackbar } from '../../context/SnackbarContext';
 import './DataEditForm.css';
 
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL;
+
 const initialState = {
     name: '',
     telephone: '',
@@ -89,7 +91,7 @@ function DataEditForm() {
         if (id) {
             const fetchDataById = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:5000/api/form/fetch-form-data/${id}`);
+                    const response = await axios.get(`${API_BASE_URL}/api/form/fetch-form-data/${id}`);
                     const data = response.data;
 
                     // Populate the form fields with the fetched data
@@ -123,7 +125,7 @@ function DataEditForm() {
             productModel: string;
             productPurchaseDate: Date | null;
         }) => {
-            return axios.put(`http://localhost:5000/api/form/update-form-data/${updatedData._id}`, updatedData);
+            return axios.put(`${API_BASE_URL}/api/form/update-form-data/${updatedData._id}`, updatedData);
         },
         onSuccess: (data) => {
             console.log('Form updated successfully:', data);

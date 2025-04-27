@@ -11,6 +11,8 @@ import axios from 'axios';
 import { useSnackbar } from '../../context/SnackbarContext';
 import './DataEntryForm.css';
 
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL;
+
 const initialState = {
     name: '',
     telephone: '',
@@ -92,7 +94,7 @@ function DataEntryForm() {
             productModel: string;
             productPurchaseDate: Date | null;
         }) => {
-            return axios.post('http://localhost:5000/api/form/write-form-data', newData);
+            return axios.post(`${API_BASE_URL}/api/form/write-form-data`, newData);
         },
         onSuccess: (data) => {
             console.log('Form submitted successfully:', data);

@@ -21,6 +21,8 @@ import './DataCardList.css';
 import DataAlertDialog from '../DataAlertDialog/DataAlertDialog';
 import ChartFormData from '../../../interfaces/ChartFormData';
 
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL;
+
 const initialState = {
     page: 1,
     limit: 10,
@@ -67,7 +69,7 @@ function DataCardList() {
     const { showSnackbar } = useSnackbar();
 
     const fetchCardsData = async (page: number, limit: number) => {
-        const response = await axios.get(`http://localhost:5000/api/form/fetch-form-data?page=${page}&limit=${limit}`);
+        const response = await axios.get(`${API_BASE_URL}/api/form/fetch-form-data?page=${page}&limit=${limit}`);
         return response.data;
     };
 
@@ -100,7 +102,7 @@ function DataCardList() {
         dispatch({ type: 'CLOSE_DIALOG' });
         if (res && state.selectedEntryId) {
             try {
-                await axios.delete(`http://localhost:5000/api/form/delete-form-data/${state.selectedEntryId}`);
+                await axios.delete(`${API_BASE_URL}/api/form/delete-form-data/${state.selectedEntryId}`);
                 console.log(`Entry with ID ${state.selectedEntryId} deleted successfully`);
                 dispatch({ type: 'SET_PAGE', payload: 1 }); // Reset to the first page
                 showSnackbar('Entry deleted successfully!');
