@@ -5,12 +5,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios'; 
+import { useSnackbar } from '../../context/SnackbarContext';
 import './DataEntryForm.css';
 
 const initialState = {
@@ -47,16 +45,14 @@ const initialState = {
         productPrice: false,
         productModel: false,
         productPurchaseDate: false,
-    },
-    snackbarOpen: false,
+    }
 };
 
 type Action =
     | { type: 'SET_FIELD'; field: keyof typeof initialState; value: string | number | dayjs.Dayjs | boolean }
     | { type: 'SET_ERROR'; field: string; value: boolean }
     | { type: 'SET_FORM_VALID'; value: boolean }
-    | { type: 'RESET_FORM' }
-    | { type: 'SET_SNACKBAR'; value: boolean };
+    | { type: 'RESET_FORM' };
 
 const reducer = (state: typeof initialState, action: Action) => {
     switch (action.type) {
@@ -66,8 +62,6 @@ const reducer = (state: typeof initialState, action: Action) => {
             return { ...state, errors: { ...state.errors, [action.field]: action.value } };
         case 'RESET_FORM':
             return initialState;
-        case 'SET_SNACKBAR':
-            return { ...state, snackbarOpen: action.value };
         default:
             return state;
     }
@@ -77,7 +71,7 @@ function DataEntryForm() {
 
     const [state, dispatch] = React.useReducer(reducer, initialState);
 
-    const [isSubmissionSuccessful, setIsSubmissionSuccessful] = React.useState(false);
+    const { showSnackbar } = useSnackbar();
 
     const mutation = useMutation({
         mutationFn: (newData: {
@@ -129,7 +123,7 @@ function DataEntryForm() {
         };
         mutation.mutate(formData, {
             onSuccess: () => {
-                setIsSubmissionSuccessful(true);
+                showSnackbar('Form submitted successfully!'); // Show Snackbar
                 dispatch({ type: 'RESET_FORM' }); // Reset the form
             },
             onError: (error) => {
@@ -137,35 +131,6 @@ function DataEntryForm() {
             },
         });
     };
-
-    React.useEffect(() => {
-        if (isSubmissionSuccessful) {
-            dispatch({ type: 'SET_SNACKBAR', value: true }); // Open Snackbar
-            setIsSubmissionSuccessful(false); // Reset the submission success state
-        }
-    }, [isSubmissionSuccessful]);
-
-    const handleSnackbarClose = (_event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        dispatch({ type: 'SET_SNACKBAR', value: false });
-    };
-
-    const action = (
-        <React.Fragment>
-            <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={(event) => handleSnackbarClose(event)}
-            >
-                <CloseIcon fontSize="small" />
-            </IconButton>
-        </React.Fragment>
-    );
-
-    
 
     const isFormValid = React.useMemo(() => {
         return Object.values(state).every((value) => value !== '' && value !== null);
@@ -362,12 +327,6 @@ function DataEntryForm() {
                         disabled={!isFormValid}
                         variant='contained'>Submit</Button>
                 </div>
-                <Snackbar
-                    open={state.snackbarOpen}
-                    autoHideDuration={3000}
-                    onClose={handleSnackbarClose}
-                    message='Form submitted successfully!'
-                    action={action} />
             </Box>
         </React.Fragment>
     );
