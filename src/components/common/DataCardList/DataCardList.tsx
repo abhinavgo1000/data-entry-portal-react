@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useSnackbar } from '../../context/SnackbarContext';
 import './DataCardList.css';
 import DataAlertDialog from '../DataAlertDialog/DataAlertDialog';
 import ChartFormData from '../../../interfaces/ChartFormData';
@@ -63,6 +64,8 @@ function DataCardList() {
 
     const navigate = useNavigate();
 
+    const { showSnackbar } = useSnackbar();
+
     const fetchCardsData = async (page: number, limit: number) => {
         const response = await axios.get(`http://localhost:5000/api/form/fetch-form-data?page=${page}&limit=${limit}`);
         return response.data;
@@ -100,6 +103,7 @@ function DataCardList() {
                 await axios.delete(`http://localhost:5000/api/form/delete-form-data/${state.selectedEntryId}`);
                 console.log(`Entry with ID ${state.selectedEntryId} deleted successfully`);
                 dispatch({ type: 'SET_PAGE', payload: 1 }); // Reset to the first page
+                showSnackbar('Entry deleted successfully!');
             } catch (error) {
                 console.error('Error deleting entry:', error);
             }
