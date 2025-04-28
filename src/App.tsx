@@ -9,14 +9,6 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PageHeader from './components/shell/PageHeader/PageHeader';
 import PageFooter from './components/shell/PageFooter/PageFooter';
-import HomePage from './components/pages/HomePage/HomePage';
-import AboutMePage from './components/pages/AboutMePage/AboutMePage';
-import DataEntryFormPage from './components/pages/DataEntryFormPage/DataEntryFormPage';
-import DataEditFormPage from './components/pages/DataEditEditFormPage/DataEditFormPage';
-import BarChartPage from './components/pages/BarChartPage/BarChartPage';
-import LineChartPage from './components/pages/LineChartPage/LineChartPage';
-import PieChartPage from './components/pages/PieChartPage/PieChartPage';
-import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
 import BreadCrumbNav from './components/common/BreadCrumbNav/BreadCrumbNav';
 import ScrollTop from './components/common/ScrollTop/ScrollTop';
 import { useSnackbar } from './components/context/SnackbarContext';
@@ -28,6 +20,15 @@ interface Props {
 }
 
 const queryClient = new QueryClient();
+
+const HomePage = React.lazy(() => import('./components/pages/HomePage/HomePage'));
+const AboutMePage = React.lazy(() => import('./components/pages/AboutMePage/AboutMePage'));
+const DataEntryFormPage = React.lazy(() => import('./components/pages/DataEntryFormPage/DataEntryFormPage'));
+const DataEditFormPage = React.lazy(() => import('./components/pages/DataEditFormPage/DataEditFormPage'));
+const BarChartPage = React.lazy(() => import('./components/pages/BarChartPage/BarChartPage'));
+const LineChartPage = React.lazy(() => import('./components/pages/LineChartPage/LineChartPage'));
+const PieChartPage = React.lazy(() => import('./components/pages/PieChartPage/PieChartPage'));
+const NotFoundPage = React.lazy(() => import('./components/pages/NotFoundPage/NotFoundPage'));
 
 function App(props: Props) {
 
