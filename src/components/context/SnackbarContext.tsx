@@ -19,8 +19,15 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setSnackbarState({ open: false, message: '' });
     };
 
+    // Memoize the context value
+    const contextValue = React.useMemo(() => ({
+        snackbarState,
+        showSnackbar,
+        hideSnackbar
+    }), [snackbarState]); // Recompute only when snackbarState changes
+
     return (
-        <SnackbarContext.Provider value={{ snackbarState, showSnackbar, hideSnackbar }}>
+        <SnackbarContext.Provider value={contextValue}>
             {children}
         </SnackbarContext.Provider>
     );
