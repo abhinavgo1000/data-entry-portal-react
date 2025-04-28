@@ -12,6 +12,7 @@ import PageFooter from './components/shell/PageFooter/PageFooter';
 import BreadCrumbNav from './components/common/BreadCrumbNav/BreadCrumbNav';
 import ScrollTop from './components/common/ScrollTop/ScrollTop';
 import { useSnackbar } from './components/context/SnackbarContext';
+import LoadingSpinner from './components/common/LoadingSpinner/LoadingSpinner';
 import './App.css';
 
 interface Props {
@@ -53,20 +54,22 @@ function App(props: Props) {
                 <Router>
                     <PageHeader />
                     <Box sx={{ maxWidth: '100%', minHeight: '100vh', m: 5 }}>
-                        <BreadCrumbNav />
-                        <Routes>
-                        {/* Define your routes here */}
-                        <Route path='/home' element={<HomePage />} />
-                        <Route path='/' element={<Navigate to='/home' />} />
-                        <Route path='/about-me' element={<AboutMePage />} />
-                        <Route path='/form' element={<DataEntryFormPage />} />
-                        <Route path='/edit-form' element={<DataEditFormPage />} />
-                        <Route path='/bar-chart' element={<BarChartPage />} />
-                        <Route path='/line-chart' element={<LineChartPage />} />
-                        <Route path='/pie-chart' element={<PieChartPage />} />
-                        <Route path='/not-found' element={<NotFoundPage />} />
-                        <Route path='*' element={<Navigate to='/notfound' />} />
-                        </Routes>
+                        <React.Suspense fallback={<LoadingSpinner />}>
+                            <BreadCrumbNav />
+                            <Routes>
+                                {/* Define your routes here */}
+                                <Route path='/home' element={<HomePage />} />
+                                <Route path='/' element={<Navigate to='/home' />} />
+                                <Route path='/about-me' element={<AboutMePage />} />
+                                <Route path='/form' element={<DataEntryFormPage />} />
+                                <Route path='/edit-form' element={<DataEditFormPage />} />
+                                <Route path='/bar-chart' element={<BarChartPage />} />
+                                <Route path='/line-chart' element={<LineChartPage />} />
+                                <Route path='/pie-chart' element={<PieChartPage />} />
+                                <Route path='/not-found' element={<NotFoundPage />} />
+                                <Route path='*' element={<Navigate to='/notfound' />} />
+                            </Routes>
+                        </React.Suspense>
                     </Box>
                     <PageFooter />
                 </Router>
